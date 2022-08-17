@@ -1,0 +1,7 @@
+adm_var:
+  principal: 'admin/admin'
+  password: 'hadoop'
+
+REALM: 'COELAB.CLOUDERA.COM'
+KDC_HOST: 'c134-node1.coelab.cloudera.com'
+

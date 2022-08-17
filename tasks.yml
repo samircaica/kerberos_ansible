@@ -1,0 +1,54 @@
+---
+- hosts: cm
+  remote_user: root
+  vars:
+  	REALM: {{ REALM }}
+  	KDC_HOST: {{ KDC_HOST }}
+  	adm_principal: {{ adm_var.principal}}
+  	adm_password: {{ adm_var.password}}
+
+  tasks:
+  - name: Install packages needed
+    package:
+      name: '{{ item  }}'
+      state: present
+    with_items:
+      - krb5-server
+      - krb5-workstation
+      - krb5-libs
+  
+  - name: write the krb5 config file
+    template:
+      src: templates/krb5.conf.j2
+      dest: /etc/krb5.conf
+  
+  - name: configure kadmin
+    command: /bin/bash -c "kdb5_util create -s -P {{adm_password}}"
+
+  - name: Start and Enable Kerberos
+    service:
+      name: '{{ item }}'
+      state: reloaded
+      enabled: yes
+    with_items:
+      - krb5kdc
+      - kadmin
+
+  - name: configure kadmin
+    command: /bin/bash -c "kadmin.local -q 'addprinc -pw {{adm_password}} {{adm_principa}}'"
+
+  - name: write the kadm5.acl config file
+    template:
+      src: templates/kadm5.acl.j2
+      dest: /var/kerberos/krb5kdc/kadm5.acl
+
+- hosts: workers
+  remote_user: root
+
+  tasks:
+  - name: Install the latest version of KRB5 Server and dependencies
+    yum:
+      name: 
+      	- krb5-libs 
+    	- krb5-workstation
+      state: present
