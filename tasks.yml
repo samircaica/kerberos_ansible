@@ -50,6 +50,8 @@
 
 - hosts: workers
   remote_user: root
+  vars_files:
+    - external_vars.yml    
 
   tasks:
   - name: Install packages needed for workers
