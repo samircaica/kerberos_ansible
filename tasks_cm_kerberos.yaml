@@ -1,0 +1,36 @@
+---
+- hosts: c134-node1
+  remote_user: root
+  vars_files:
+    - external_vars.yml
+
+  tasks:
+    - name: Check CM API
+      uri:
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/clusters"
+        method: GET
+        validate_certs: no
+        url_username: "{{ cm_vars.cm_user }}"
+        url_password: "{{ cm_vars.cm_password }}"
+      register: results
+
+    - debug:
+        var: results
+
+    - name: Cluster Name
+      set_fact:  
+        cluster_name:  "{{ results.json | json_query(jmesquery) }}"
+      vars:
+        jmesquery: "items[0].name"
+
+    - name: Check CM API2
+      uri:
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/clusters/{{ cluster_name }}/kerberosInfo/"
+        method: GET
+        validate_certs: no
+        url_username: "{{ cm_vars.cm_user }}"
+        url_password: "{{ cm_vars.cm_password }}"
+      register: kerberos
+
+    - debug:
+        var: kerberos.json.kerberized
