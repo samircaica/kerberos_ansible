@@ -1,11 +1,8 @@
 ---
 - hosts: cm
   remote_user: root
-  vars:
-  	REALM: {{ REALM }}
-  	KDC_HOST: {{ KDC_HOST }}
-  	adm_principal: {{ adm_var.principal}}
-  	adm_password: {{ adm_var.password}}
+  vars_files:
+    - external_vars.yml
 
   tasks:
   - name: Install packages needed
@@ -23,7 +20,7 @@
       dest: /etc/krb5.conf
   
   - name: configure kadmin
-    command: /bin/bash -c "kdb5_util create -s -P {{adm_password}}"
+    command: /bin/bash -c "kdb5_util create -s -P {{ adm_var.password }}"
 
   - name: Start and Enable Kerberos
     service:
@@ -35,7 +32,7 @@
       - kadmin
 
   - name: configure kadmin
-    command: /bin/bash -c "kadmin.local -q 'addprinc -pw {{adm_password}} {{adm_principa}}'"
+    command: /bin/bash -c "kadmin.local -q 'addprinc -pw {{ adm_var.password }} {{ adm_var.principal }}'"
 
   - name: write the kadm5.acl config file
     template:
