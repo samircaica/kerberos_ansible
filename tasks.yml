@@ -13,6 +13,7 @@
       - krb5-server
       - krb5-workstation
       - krb5-libs
+      - openldap-clients
   
   - name: write the krb5 config file
     template:
@@ -41,7 +42,10 @@
       - kadmin
 
   - name: configure kadmin
-    command: /bin/bash -c "kadmin.local -q 'addprinc -pw {{ adm_var.password }} {{ adm_var.principal }}'"
+    command: /bin/bash -c "kadmin.local -q 'addprinc -pw {{ adm_var.password }} {{ adm_var.principal }}@{{ REALM }}'"
+
+  - name: Cloudera Manager Server administrator principal
+    command: /bin/bash -c "kadmin.local -q 'addprinc -pw {{ adm_var.password }} cloudera-scm/admin@{{ REALM }}'"
 
   - name: write the kadm5.acl config file
     template:

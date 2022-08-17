@@ -6,3 +6,11 @@ adm_var:
 REALM: 'COELAB.CLOUDERA.COM'
 KDC_HOST: 'c134-node1.coelab.cloudera.com'
 
+cm_vars:
+  cm_protocol: 'https'
+  cm_host: 'c134-node1.coelab.cloudera.com'
+  cm_port: '7183'
+  cm_user: 'admin'
+  cm_password: 'scaica'
+  cm_api_version: 'v45'
+
