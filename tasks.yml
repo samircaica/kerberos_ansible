@@ -19,7 +19,7 @@
       src: templates/krb5.conf.j2
       dest: /etc/krb5.conf
 
-  - name: Is there a database already? If so, it will be removed and a new one created
+  - name: Check if DB already exists
     stat:
       path: /var/kerberos/krb5kdc/principal
     register: db_exists
