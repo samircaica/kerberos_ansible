@@ -1,3 +1,4 @@
+---
 adm_var:
   principal: 'admin/admin'
   password: 'hadoop'
