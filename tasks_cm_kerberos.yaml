@@ -43,7 +43,7 @@
         url_username: "{{ cm_vars.cm_user }}"
         url_password: "{{ cm_vars.cm_password }}"
       register: cm_config
-      when: kerberos.json.kerberized == false
+      #when: kerberos.json.kerberized == false
 
     - debug:
         var: cm_config
@@ -59,7 +59,7 @@
         url_username: "{{ cm_vars.cm_user }}"
         url_password: "{{ cm_vars.cm_password }}"
       register: cm_config_configureForKerberos
-      when: kerberos.json.kerberized == false
+      #when: kerberos.json.kerberized == false
 
     - debug:
         var: cm_config_configureForKerberos
@@ -74,10 +74,58 @@
         validate_certs: no
         url_username: "{{ cm_vars.cm_user }}"
         url_password: "{{ cm_vars.cm_password }}"
-
       register: cm_config_set
-      when: kerberos.json.kerberized == false
+      #when: kerberos.json.kerberized == false
 
     - debug:
         var: cm_config_set
+
+    - name: CM services restart
+      uri:
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/clusters/{{ cluster_name }}/commands/restart"
+        method: POST
+        return_content: yes
+        body_format: form-urlencoded
+        body:
+          clustername: '{{ cluster_name }}'
+        validate_certs: no
+        url_username: "{{ cm_vars.cm_user }}"
+        url_password: "{{ cm_vars.cm_password }}"
+      register: cm_config_serviceRestart
+      #when: kerberos.json.kerberized == false
+
+    - debug:
+        var: cm_config_servicesRestart
+
+    - name: CM Mgmt services restart
+      uri:
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/cm/service/commands/restart"
+        method: POST
+        return_content: yes
+        validate_certs: no
+        url_username: "{{ cm_vars.cm_user }}"
+        url_password: "{{ cm_vars.cm_password }}"
+      register: cm_config_mgmtServiceRestart
+      #when: kerberos.json.kerberized == false
+
+    - debug:
+        var: cm_config_mgmtServiceRestart
+
+    - name: CM config importAdminCredentials
+      uri:
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/cm/commands/importAdminCredentials/"
+        method: POST
+        return_content: yes
+        body_format: form-urlencoded
+        body:
+          username: '{{ adm_var.principal }}@{{ REALM }}'
+          password: '{{ adm_var.password }}'
+        validate_certs: no
+        url_username: "{{ cm_vars.cm_user }}"
+        url_password: "{{ cm_vars.cm_password }}"
+      register: cm_config_importAdminCredentials
+      #when: kerberos.json.kerberized == false
+
+    - debug:
+        var: cm_config_importAdminCredentials
 
