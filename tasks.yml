@@ -43,9 +43,10 @@
   remote_user: root
 
   tasks:
-  - name: Install the latest version of KRB5 Server and dependencies
-    yum:
-      name: 
-      	- krb5-libs 
-    	- krb5-workstation
+  - name: Install packages needed for workers
+    package:
+      name: '{{ item  }}'
       state: present
+    with_items:
+      - krb5-workstation
+      - krb5-libs
