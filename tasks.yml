@@ -18,7 +18,16 @@
     template:
       src: templates/krb5.conf.j2
       dest: /etc/krb5.conf
+
+  - name: Is there a database already? If so, it will be removed and a new one created
+    stat:
+      path: /var/kerberos/krb5kdc/principal
+    register: db_exists
   
+  - name: Destroy Existing KDC Database
+    command: /bin/bash -c "kdb5_util destroy -f {{ REALM }}"
+    when: db_exists.stat.exists == true
+    
   - name: configure kadmin
     command: /bin/bash -c "kdb5_util create -s -P {{ adm_var.password }}"
 
