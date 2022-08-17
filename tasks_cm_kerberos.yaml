@@ -48,6 +48,23 @@
     - debug:
         var: cm_config
 
+    - name: Set CM ApiConfigureForKerberosArguments
+      uri:
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/clusters/{{ cluster_name }}/commands/configureForKerberos"
+        method: PUT
+        return_content: yes
+        body: "{ \"datanodeTransceiverPort\" : {{ datanodeTransceiverPort }}, \"datanodeWebPort\" : {{ datanodeWebPort }} }"
+        body_format: json
+        validate_certs: no
+        url_username: "{{ cm_vars.cm_user }}"
+        url_password: "{{ cm_vars.cm_password }}"
+
+      register: cm_config_configureForKerberos
+      when: kerberos.json.kerberized == false
+
+    - debug:
+        var: cm_config_configureForKerberos
+        
     - name: Set CM config
       uri:
         url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/cm/config/"
