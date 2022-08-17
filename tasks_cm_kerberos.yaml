@@ -34,3 +34,34 @@
 
     - debug:
         var: kerberos.json.kerberized
+
+    - name: Check CM config
+      uri:
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/cm/config/"
+        method: GET
+        validate_certs: no
+        url_username: "{{ cm_vars.cm_user }}"
+        url_password: "{{ cm_vars.cm_password }}"
+      register: cm_config
+      when: kerberos.json.kerberized == false
+
+    - debug:
+        var: cm_config
+
+    - name: Set CM config
+      uri:
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/cm/config/"
+        method: PUT
+        return_content: yes
+        body: "{ \"items\" : [ { \"name\" : \"SECURITY_REALM\", \"value\" : \"{{ REALM }}\" }, { \"name\" : \"KDC_HOST\", \"value\" : \"{{ KDC_HOST }}\" }, { \"name\" : \"KRB_ENC_TYPES\", \"value\" : \"{{ KRB_ENC_TYPES }}\" }, { \"name\" : \"KDC_ADMIN_HOST\", \"value\" : \"{{ KDC_HOST }}\" }, { \"name\" : \"KRB_MANAGE_KRB5_CONF\", \"value\" : true } ]}"
+        body_format: json
+        validate_certs: no
+        url_username: "{{ cm_vars.cm_user }}"
+        url_password: "{{ cm_vars.cm_password }}"
+
+      register: cm_config_set
+      when: kerberos.json.kerberized == false
+
+    - debug:
+        var: cm_config_set
+
