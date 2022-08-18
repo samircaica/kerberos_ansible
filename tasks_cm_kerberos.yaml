@@ -193,7 +193,7 @@
     - debug:
         var: cm_config_mgmtServiceStart
 
-    - name: Check CM Services Stopped
+    - name: Check CM Services Started in GOOD_HEALTH
       uri:
         url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/clusters"
         method: GET
