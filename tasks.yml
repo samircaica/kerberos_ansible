@@ -60,7 +60,7 @@
   - name: write the kadm5.acl config file
     template:
       src: templates/kadm5.acl.j2
-      dest: /var/kerberos/krb5kdc/kadm5.
+      dest: /var/kerberos/krb5kdc/kadm5.acl
 
   - name: Restart service kadmin
     service:
