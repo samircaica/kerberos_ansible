@@ -160,7 +160,7 @@
 
     - name: Pause for 2 minutes to generate credentials
       pause:
-        minutes: 1
+        seconds: 30
 
     - name: CM services Start
       uri:
