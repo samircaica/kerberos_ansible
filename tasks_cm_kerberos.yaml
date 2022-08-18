@@ -112,7 +112,7 @@
 
     - name: CM config importAdminCredentials
       uri:
-        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/cm/commands/importAdminCredentials/"
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/cm/commands/importAdminCredentials?password={{ adm_var.password }}&username={{ adm_var.principal }}@{{ REALM }}"
         method: POST
         return_content: yes
         body_format: form-urlencoded
@@ -130,7 +130,7 @@
 
     - name: Set CM ApiConfigureForKerberosArguments
       uri:
-        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/clusters/{{ cluster_name }}/commands/configureForKerberos"
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/clusters/{{ cluster_name }}/commands/configureForKerberos?clusterName={{ cluster_name }}"
         method: POST
         return_content: yes
         body: "{ \"datanodeTransceiverPort\" : {{ cm_vars.datanodeTransceiverPort }}, \"datanodeWebPort\" : {{ cm_vars.datanodeWebPort }} }"
@@ -144,19 +144,19 @@
     - debug:
         var: cm_config_apiConfigureForKerberos
 
-    #- name: CM config generateCredentials
-    #  uri:
-    #    url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/cm/commands/generateCredentials"
-    #   method: POST
-    #   return_content: yes
-    #   validate_certs: no
-    #   url_username: "{{ cm_vars.cm_user }}"
-    #   url_password: "{{ cm_vars.cm_password }}"
-    # register: cm_config_generateCredentials
-    # #when: kerberos.json.kerberized == false
+    - name: CM config generateCredentials
+      uri:
+        url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/cm/commands/generateCredentials"
+        method: POST
+        return_content: yes
+        validate_certs: no
+        url_username: "{{ cm_vars.cm_user }}"
+        url_password: "{{ cm_vars.cm_password }}"
+      register: cm_config_generateCredentials
+      #when: kerberos.json.kerberized == false
 
-    #- debug:
-    #    var: cm_config_generateCredentials
+    - debug:
+        var: cm_config_generateCredentials
 
     - name: CM services Start
       uri:
