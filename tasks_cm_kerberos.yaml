@@ -158,6 +158,10 @@
     - debug:
         var: cm_config_generateCredentials
 
+    - name: Pause for 2 minutes to generate credentials
+      pause:
+        minutes: 2
+
     - name: CM services Start
       uri:
         url: "{{ cm_vars.cm_protocol }}://{{ cm_vars.cm_host }}:{{ cm_vars.cm_port }}/api/{{ cm_vars.cm_api_version }}/clusters/{{ cluster_name }}/commands/start"
