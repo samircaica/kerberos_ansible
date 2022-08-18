@@ -8,7 +8,7 @@ KDC_HOST: 'c134-node1.coelab.cloudera.com'
 KRB_ENC_TYPES: 'aes256-cts aes128-cts des3-hmac-sha1 des-hmac-sha1 des-cbc-crc'
 
 cm_vars:
-  cm_protocol: 'https'
+  cm_protocol: 'http'
   #SSL
   #cm_protocol: 'https'
   cm_host: 'c134-node1.coelab.cloudera.com'
