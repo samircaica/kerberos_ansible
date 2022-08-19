@@ -158,7 +158,7 @@
     - debug:
         var: cm_config_generateCredentials
 
-    - name: Pause for 2 minutes to generate credentials
+    - name: Pause for 30 secons to generate credentials
       pause:
         seconds: 30
 
